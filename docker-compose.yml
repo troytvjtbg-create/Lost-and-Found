@@ -1,0 +1,21 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: lost-found-db
+    environment:
+      POSTGRES_DB: lostfound
+      POSTGRES_USER: lostfound
+      POSTGRES_PASSWORD: lostfound123
+    volumes:
+      - lost-found-data:/var/lib/postgresql/data
+      - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lostfound -d lostfound"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  lost-found-data:
